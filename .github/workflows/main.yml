@@ -30,20 +30,10 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # Build immer, Push nur auf Push-Events
-      - name: Build image
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          push: false
-          tags: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/app:latest
-          provenance: false
-
-      - name: Push image (only on push)
-        if: ${{ github.event_name == 'push' }}
+      - name: Build and push
+        id: docker_build
         uses: docker/build-push-action@v6
         with:
           context: .
           push: true
-          tags: docker.io/${{ secrets.DOCKERHUB_USERNAME }}/app:latest
-          provenance: false
+          tags: chrixga/app:latest
